@@ -48,26 +48,28 @@ namespace InformacionPersonal.Controllers
         // POST: Personas/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Persona persona)
+        public ActionResult Create([Bind(Include = "ID,Nombre,ApellidoPaterno,ApellidoMaterno,CURP")] Persona persona)
         {
-            PersonaValidator validator = new PersonaValidator();
-            ValidationResult result = validator.Validate(persona);
+            //PersonaValidator validator = new PersonaValidator();
+            //ValidationResult result = validator.Validate(persona);
 
-            if (result.IsValid)
+            //if (result.IsValid)
+            //{
+            if (ModelState.IsValid)
             {
                 db.Personal.Add(persona);
-                //db.SaveChanges();
-                //return RedirectToAction("Index");
+                db.SaveChanges();
+                return RedirectToAction("ListaPersonas");
             }
-            else
-            {
-                foreach (ValidationFailure failer in result.Errors)
-                {
-                    ModelState.AddModelError(failer.PropertyName, failer.ErrorMessage);
-                }
-            }
+            //else
+            //{
+            //    foreach (ValidationFailure failer in result.Errors)
+            //    {
+            //        ModelState.AddModelError(failer.PropertyName, failer.ErrorMessage);
+            //    }
+            //}
 
             return View(persona);
         }
@@ -76,17 +78,6 @@ namespace InformacionPersonal.Controllers
         {
             Persona model = new Persona();
             return PartialView("_CreatePartial", model);
-        }
-
-        [HttpPost]
-        public JsonResult AddUserInfo(Persona model)
-        {
-            bool isSuccess = true;
-            if (ModelState.IsValid)
-            {
-                //isSuccess = Save data here return boolean
-            }
-            return Json(isSuccess);
         }
 
         public ActionResult EditPartial(int? id)
@@ -145,7 +136,7 @@ namespace InformacionPersonal.Controllers
             {
                 db.Entry(persona).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("ListaPersonas");
             }
             return View(persona);
         }
