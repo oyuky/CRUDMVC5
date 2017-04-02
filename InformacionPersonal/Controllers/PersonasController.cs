@@ -17,10 +17,37 @@ namespace InformacionPersonal.Controllers
     {
         private PersonalContext db = new PersonalContext();
 
-        // GET: Personas
         public ActionResult ListaPersonas()
         {
-            return View(db.Personal.ToList());
+            return View(this.GetPersonas(1));
+        }
+
+        // GET: Personas
+
+        [HttpPost]
+        public ActionResult ListaPersonas(int currentPageIndex)
+        {
+            return View(this.GetPersonas(currentPageIndex));
+            //return View(db.Personal.ToList());
+        }
+
+        private PersonasListViewmodel GetPersonas(int currentPage)
+        {
+            int maxRows = 10;
+            PersonasListViewmodel customerModel = new PersonasListViewmodel();
+
+            customerModel.Personas = db.Personal.ToList();
+            customerModel.Personas
+                .OrderBy(persona => persona.ID)
+                        .Skip((currentPage - 1) * maxRows)
+                        .Take(maxRows).ToList();
+
+            double pageCount = (double)((decimal)db.Personal.Count() / Convert.ToDecimal(maxRows));
+            customerModel.PageCount = (int)Math.Ceiling(pageCount);
+
+            customerModel.CurrentPageIndex = currentPage;
+
+            return customerModel;
         }
 
 
@@ -142,7 +169,7 @@ namespace InformacionPersonal.Controllers
         }
 
         // GET: Personas/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult DeletePartial(int? id)
         {
             if (id == null)
             {
@@ -153,7 +180,7 @@ namespace InformacionPersonal.Controllers
             {
                 return HttpNotFound();
             }
-            return View(persona);
+            return PartialView("_DeletePartial", persona);
         }
 
         // POST: Personas/Delete/5
@@ -164,7 +191,7 @@ namespace InformacionPersonal.Controllers
             Persona persona = db.Personal.Find(id);
             db.Personal.Remove(persona);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("ListaPersonas");
         }
 
         protected override void Dispose(bool disposing)

@@ -4,12 +4,13 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <script src="~/Scripts/bootstrap.min.js"></script>*@
 
-@using (
-                        Ajax.BeginForm("Create", "Personas", new AjaxOptions()
-                        {
-                            UpdateTargetId = "persona",
-                            HttpMethod = "Post"
-                        }))
+@using (Ajax.BeginForm("Create", "Personas", new AjaxOptions()
+{
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "persona",
+    HttpMethod = "Post",
+    OnSuccess = "mensajeExito"
+}))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
