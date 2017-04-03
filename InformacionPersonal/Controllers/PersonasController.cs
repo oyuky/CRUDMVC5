@@ -17,42 +17,80 @@ namespace InformacionPersonal.Controllers
     {
         private PersonalContext db = new PersonalContext();
 
+        private PersonasList personaslst = new PersonasList();
+
+        #region ***Listar....
+        //Se utliza este tipo de paginado para evitar consultar todos lo registros,
+        //de esta forma solo se consultan los registros correspondientes a
+        //la pagina que se esta visualizando.
+
+        //Carga el listado de personas inicialmente...
+        // GET: Personas
         public ActionResult ListaPersonas()
         {
-            return View(this.GetPersonas(1));
+            return View(GetPersonas(1, null));
+            //return PartialView("_ListPartial", GetPersonas(1, null));
         }
 
+        //Carga el listado de personas de una pagina en especifico
         // GET: Personas
-
         [HttpPost]
-        public ActionResult ListaPersonas(int currentPageIndex)
+        public ActionResult ListaPersonas(int currentPageIndex, [Bind(Include = "ID,Nombre,ApellidoPaterno,ApellidoMaterno,CURP")]Persona filtro)
         {
-            return View(this.GetPersonas(currentPageIndex));
-            //return View(db.Personal.ToList());
+            //return View(GetPersonas(currentPageIndex, filtro));
+            return PartialView("_ListPartial", GetPersonas(currentPageIndex, filtro));
         }
 
-        private PersonasListViewmodel GetPersonas(int currentPage)
+        //Obtiene el listado de personas de una pagina en especifico
+        private PersonasList GetPersonas(int? currentPage, Persona filtro)
         {
-            int maxRows = 10;
-            PersonasListViewmodel customerModel = new PersonasListViewmodel();
+            double pageCount;
+            int maxRows = 5;
+            if (filtro != null)
+            {
+                personaslst.Personas = db.Personal.Where(x=>String.IsNullOrEmpty(filtro.Nombre)||x.Nombre.Contains(filtro.Nombre))
+                    .Where(x=>String.IsNullOrEmpty(filtro.ApellidoPaterno) || x.ApellidoPaterno.Contains(filtro.ApellidoPaterno))
+                    .Where(x => String.IsNullOrEmpty(filtro.ApellidoMaterno) || x.ApellidoMaterno.Contains(filtro.ApellidoMaterno))
+                    .Where(x => String.IsNullOrEmpty(filtro.CURP) || x.CURP.Contains(filtro.CURP))
+                    .ToList();
+                pageCount = (double)((decimal)personaslst.Personas.Count / Convert.ToDecimal(maxRows));
+                personaslst.Personas = personaslst.Personas.OrderBy(persona => persona.ID)
+                                         .Skip((currentPage.Value - 1) * maxRows)
+                                         .Take(maxRows).ToList();
+            }
+            else
+            {
+                personaslst.Personas = (from item in db.Personal
+                                        select item)
+                                         .OrderBy(persona => persona.ID)
+                                         .Skip((currentPage.Value - 1) * maxRows)
+                                         .Take(maxRows).ToList();
+                pageCount = (double)((decimal)db.Personal.Count() / Convert.ToDecimal(maxRows));
+            }
+            personaslst.PageCount = (int)Math.Ceiling(pageCount);
 
-            customerModel.Personas = db.Personal.ToList();
-            customerModel.Personas
-                .OrderBy(persona => persona.ID)
-                        .Skip((currentPage - 1) * maxRows)
-                        .Take(maxRows).ToList();
+            personaslst.CurrentPageIndex = currentPage.Value;
 
-            double pageCount = (double)((decimal)db.Personal.Count() / Convert.ToDecimal(maxRows));
-            customerModel.PageCount = (int)Math.Ceiling(pageCount);
-
-            customerModel.CurrentPageIndex = currentPage;
-
-            return customerModel;
+            return personaslst;
         }
+        #endregion
 
-
+        #region ***Ver detalles
         // GET: Personas/Details/5
-        public ActionResult Details(int? id)
+        //public ActionResult Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Persona persona = db.Personal.Find(id);
+        //    if (persona == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(persona);
+        //}
+        public ActionResult DetailsPartial(int? id)
         {
             if (id == null)
             {
@@ -63,8 +101,9 @@ namespace InformacionPersonal.Controllers
             {
                 return HttpNotFound();
             }
-            return View(persona);
+            return PartialView("_DetailsPartial", persona);
         }
+        #endregion
 
         // GET: Personas/Create
         public ActionResult Create()
@@ -75,30 +114,53 @@ namespace InformacionPersonal.Controllers
         // POST: Personas/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "ID,Nombre,ApellidoPaterno,ApellidoMaterno,CURP")] Persona persona)
+        //{
+        //    //PersonaValidator validator = new PersonaValidator();
+        //    //ValidationResult result = validator.Validate(persona);
+
+        //    //if (result.IsValid)
+        //    //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Personal.Add(persona);
+        //        db.SaveChanges();
+        //        return RedirectToAction("ListaPersonas");
+        //    }
+        //    //else
+        //    //{
+        //    //    foreach (ValidationFailure failer in result.Errors)
+        //    //    {
+        //    //        ModelState.AddModelError(failer.PropertyName, failer.ErrorMessage);
+        //    //    }
+        //    //}
+
+        //    return View(persona);
+        //}
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Nombre,ApellidoPaterno,ApellidoMaterno,CURP")] Persona persona)
         {
-            //PersonaValidator validator = new PersonaValidator();
-            //ValidationResult result = validator.Validate(persona);
+            PersonaValidator validator = new PersonaValidator();
+            ValidationResult result = validator.Validate(persona);
 
-            //if (result.IsValid)
-            //{
-            if (ModelState.IsValid)
+            if (result.IsValid && ModelState.IsValid)
             {
                 db.Personal.Add(persona);
                 db.SaveChanges();
-                return RedirectToAction("ListaPersonas");
             }
-            //else
-            //{
-            //    foreach (ValidationFailure failer in result.Errors)
-            //    {
-            //        ModelState.AddModelError(failer.PropertyName, failer.ErrorMessage);
-            //    }
-            //}
+            else
+            {
+                foreach (ValidationFailure failer in result.Errors)
+                {
+                    ModelState.AddModelError(failer.PropertyName, failer.ErrorMessage);
+                }
+                Response.StatusCode = 412;
+            }
 
-            return View(persona);
+            return PartialView("_CreatePartial", persona);
         }
 
         public ActionResult CreatePartial()
@@ -122,20 +184,7 @@ namespace InformacionPersonal.Controllers
         }
 
 
-        public ActionResult DetailsPartial(int? id)
-        {
-            //List<Persona> model = db.Personal.ToList();
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Persona persona = db.Personal.Find(id);
-            if (persona == null)
-            {
-                return HttpNotFound();
-            }
-            return PartialView("_DetailsPartial", persona);
-        }
+        
 
         // GET: Personas/Edit/5
         public ActionResult Edit(int? id)
@@ -168,6 +217,7 @@ namespace InformacionPersonal.Controllers
             return View(persona);
         }
 
+        #region ***Eliminar...
         // GET: Personas/Delete/5
         public ActionResult DeletePartial(int? id)
         {
@@ -193,6 +243,7 @@ namespace InformacionPersonal.Controllers
             db.SaveChanges();
             return RedirectToAction("ListaPersonas");
         }
+        #endregion
 
         protected override void Dispose(bool disposing)
         {

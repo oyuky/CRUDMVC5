@@ -18,6 +18,11 @@ namespace InformacionPersonal
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Personas", action = "ListaPersonas", id = UrlParameter.Optional }
             );
+            //routes.MapRoute(
+            //    name: "routePersonas",
+            //    url: "{controller}/{action}/{currentPageIndex}/{nombre}",
+            //    defaults: new { controller = "Personas", action = "ListaPersonas", currentPageIndex = UrlParameter.Optional, personanombre = UrlParameter.Optional }
+            //);
         }
     }
 }

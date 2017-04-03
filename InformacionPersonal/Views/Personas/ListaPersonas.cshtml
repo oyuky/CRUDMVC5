@@ -1,4 +1,4 @@
-﻿@model  InformacionPersonal.Models.PersonasListViewmodel
+﻿@model  InformacionPersonal.Models.PersonasList
 
 @{
     ViewBag.Title = "Lista de personas";
@@ -6,154 +6,48 @@
 }
 
 <h2>Listado de Personas</h2>
-
-<link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
-<script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.tablesorter.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.tablesorter.pager.js")" type="text/javascript"></script>
+<div class="form-horizontal">
+    @Html.ValidationSummary(true)
+    <table>
+        <tr>
+            <td>
+                @Html.EditorFor(model => model.Filtro.Nombre, new { htmlAttributes = new { @class = "form-control", @placeholder = "Nombre", } })
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Filtro.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control", @placeholder = "Apellido Paterno" } })
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Filtro.ApellidoMaterno, new { htmlAttributes = new { @class = "form-control", @placeholder = "Apellido Materno" } })
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Filtro.CURP, new { htmlAttributes = new { @class = "form-control", @placeholder = "CURP" } })
+            </td>
+            <td>
+                <a href="javascript:filtrar(1);" class="btn btn-info" title="Filtrar"><span class="glyphicon glyphicon-filter" /> Filtrar</a>
+            </td>
+        </tr>
+    </table>
+    <br />
+    @*<input type="submit" value="Buscar" />*@
+    @*</form>*@
+</div>
 
 <p>
-    <a href="javascript:void(0);" class="btn btn-success crearPersona" title="Crear Persona"><span class="glyphicon glyphicon-user" /> Crear Persona</a>
+    <a href="javascript:void(0);" class="btn btn-success crearPersona" title="Crear Persona"><span class="glyphicon glyphicon-user" > Crear</span></a>
 </p>
-<div class="table-responsive">
-    <table class="table personasInfo">
-        <tr>
-            <th>
-                Nombre
-            </th>
-            <th>
-                ApellidoPaterno
-            </th>
-            <th>
-               ApellidoMaterno
-            </th>
-            <th>
-                CURP
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (InformacionPersonal.Models.Persona item in Model.Personas)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ApellidoPaterno)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ApellidoMaterno)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CURP)
-                </td>
-                <td>
-                    <a href="javascript:void(0);" class="btn btn-info detallePersona" data-id="@item.ID" title="Detalles"><span class="glyphicon glyphicon-eye-open" /></a>
-                    <a href="javascript:void(0);" class="btn btn-warning editarPersona" data-id="@item.ID" title="Editar"><span class="glyphicon glyphicon-edit" /></a>
-                    <a href="javascript:void(0);" class="btn btn-danger eliminarPersona" data-id="@item.ID" title="Eliminar"><span class="glyphicon glyphicon-remove" /></a>
-                </td>
-            </tr>
-        }
-    </table>
-    <table cellpadding="0" cellspacing="0">
-        <tr>
-            @for (int i = 1; i <= Model.PageCount; i++)
-            {
-                <td>
-                    @if (i != (Model.CurrentPageIndex))
-                    {
-                        <a href="javascript:PagerClick(@i);">@i</a>
-                    }
-                    else
-                    {
-                        <span>@i</span>
-                    }
-                </td>
-            }
-        </tr>
-    </table>
-    <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
-    <br />
-    <div id="pager" style="position: none;">
-        <form>
-            <a href="javascript:void(0);" class="first"><span class="glyphicon glyphicon-step-backward" /></a>
-            <a href="javascript:void(0);" class="prev"><span class="glyphicon glyphicon-backward" /></a>
-            <input type="text" class="pagedisplay" />
-            <a href="javascript:void(0);" class="next"><span class="glyphicon glyphicon-forward" /></a>
-            <a href="javascript:void(0);" class="last"><span class="glyphicon glyphicon-step-forward" /></a>
-            <select class="pagesize">
-                <option selected="selected" value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-            </select>
-        </form>
-    </div>
+<div id="listPersonas">
+    @{ Html.RenderPartial("_ListPartial", Model); }
 </div>
+
 @section scripts {
     <script>
         var ajaxCallEditURL = "/Personas/EditPartial";
         var ajaxCallCreateURL = "/Personas/CreatePartial";
         var ajaxCallDetailsURL = "/Personas/DetailsPartial";
         var ajaxCallDeleteURL = "/Personas/DeletePartial";
+        var ajaxCallListaURL = "/Personas/ListaPersonas";
         //Abre el modal para crear un registro
         $(function () {
-            function PagerClick(index) {
-                document.getElementById("hfCurrentPageIndex").value = index;
-                document.forms[0].submit();
-            }
-            @*var assetListVM;
-            $(function () {
-                assetListVM = {
-                    dt: null,
-
-                    init: function () {
-                        dt = $('#assets-data-table').DataTable({
-                            "serverSide": true,
-                            "processing": true,
-                            "ajax": {
-                                "url": 
-                                "@Url.Action("ListaPersonas", "Personas")"
-                        },
-                            "columns": [
-                                { "title": "Bar Code", 
-                                    "data": "BarCode", 
-                                    "searchable": true },
-                                { "title": "Manufacturer", 
-                                    "data": "Manufacturer", 
-                                    "searchable": true },
-                                { "title": "Model", 
-                                    "data": "ModelNumber", 
-                                    "searchable": true },
-                                { "title": "Building", 
-                                    "data": "Building", 
-                                    "searchable": true },
-                                { "title": "Room No", 
-                                    "data": "RoomNo" },
-                                { "title": "Quantity", 
-                                    "data": "Quantity" }
-                            ],
-                            "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
-                            });
-            }
-            }*@
-
-            // initialize the datatables
-            //assetListVM.init();
-            //$(".personasInfo")
-            //      .tablesorter({ widthFixed: true })
-            //      .tablesorterPager({ container: $("#pager") });
-            //$(".personasInfo").bind("sortStart", function () {
-            //    $("#sortMsg").html('Sorting');
-            //}).bind("sortEnd", function () {
-            //    $("#sortMsg").html('');
-            //});
-
-            ////Hide/delete row on click.
-            //$("#empTable img").click(function () { $(this).parent().parent().hide(); });
-
             $(".crearPersona").click(function () {
                 var $buttonClicked = $(this);
                 var options = {
@@ -262,21 +156,63 @@
             });
         });
 
+        function filtrar(pageindex) {
+            var $buttonClicked = $(this);
+            var options = {
+                "backdrop": "static",
+                keyboard: true
+            };
+            $.ajax({
+                type: "POST",
+                url: '/Personas/ListaPersonas',
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                data: JSON.stringify(
+                    {
+                        "currentPageIndex": pageindex,
+                    "Nombre": document.getElementById("Filtro_Nombre").value,
+                    "ApellidoPaterno": document.getElementById("Filtro_ApellidoPaterno").value,
+                    "ApellidoMaterno": document.getElementById("Filtro_ApellidoMaterno").value,
+                    "CURP": document.getElementById("Filtro_CURP").value
+                    }),
+                success: function (data) {
+                    $("#listPersonas").html(data);
+                },
+                error: function (data) {
+                    debugger;
+                    alert(data.responseText);
+                }
+            });
+        }
+
+        function PagerClick(index) {
+            document.getElementById("hfCurrentPageIndex").value = index;
+        }
+
         function mensajeExito() {
             alert("Registro Guardado exitosamente.");
         }
     </script>
 }
-<table style="background-color:orange; width:100%; border:solid 5px green; padding:20px;">
-    <tr>
-        <td align="center"
-            style="padding:20px;">
-            <a href="javascript:void(0);" class="getAllEMP" style="font-size:20pt;">Get All Employee Information</a>
-        </td>
-    </tr>
-</table>
+
 
 <div id="divModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" data-dismiss="modal" class="close"><span>&times;</span></a>
+                <h3 id="modal_title" class="modal-title"></h3>
+            </div>
+            <div id="divModalContent" class="modal-body">
+                <div style="text-align:center;display:none" id="loaderDiv">
+                    <img src="~/Content/images/load.gif" width="70" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="divMessages" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

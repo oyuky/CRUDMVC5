@@ -1,11 +1,9 @@
 ﻿@model InformacionPersonal.Models.Persona
-@using (
-                Ajax.BeginForm("Edit", "Personas",
-                new AjaxOptions()
-                {
-                    UpdateTargetId = "persona",
-                    HttpMethod = "Post"
-                }))
+@using (Ajax.BeginForm("Edit", "Personas", new AjaxOptions()
+{
+    UpdateTargetId = "persona",
+    HttpMethod = "Post"
+}))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
@@ -47,7 +45,7 @@
         <div class="modal-footer">
             <div class="form-group">
                 <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                <input type="submit" value="Guardar" class="btn btn-success"/>
+                <input type="submit" value="Guardar" class="btn btn-success" />
             </div>
         </div>
     </div>
