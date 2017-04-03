@@ -226,6 +226,7 @@ function crear() {
         success: function (data) {
             $("#txtMessage").html("Registro guardado exitosamente.");
             $('#message').show();
+            $("#listPersonas").html(data);
             $("#divModal").modal("hide");
             $("#message").fadeTo(2000, 500).slideUp(500, function () {
                 $("#message").slideUp(500);

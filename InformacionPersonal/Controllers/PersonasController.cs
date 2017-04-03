@@ -63,7 +63,6 @@ namespace InformacionPersonal.Controllers
                 pageCount = (double)((decimal)db.Personal.Count() / Convert.ToDecimal(maxRows));
             }
             personaslst.PageCount = (int)Math.Ceiling(pageCount);
-
             personaslst.CurrentPageIndex = currentPage.Value;
 
             return personaslst;
