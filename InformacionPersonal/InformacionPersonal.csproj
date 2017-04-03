@@ -206,6 +206,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\ServicesConsumer.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Personas\_ListPartial.cshtml" />
     <Content Include="Web.config">
@@ -225,10 +226,6 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Personas\ListaPersonas.cshtml" />
-    <Content Include="Views\Personas\Create.cshtml" />
-    <Content Include="Views\Personas\Delete.cshtml" />
-    <Content Include="Views\Personas\Details.cshtml" />
-    <Content Include="Views\Personas\Edit.cshtml" />
     <Content Include="Views\Personas\_DetailsPartial.cshtml" />
     <Content Include="Views\Personas\_CreatePartial.cshtml" />
     <Content Include="Views\Personas\_EditPartial.cshtml" />

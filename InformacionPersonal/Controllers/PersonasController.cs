@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FluentValidation.Results;
+using InformacionPersonal.DAL;
+using InformacionPersonal.Models;
+using InformacionPersonal.Models.Validations;
+using System;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using InformacionPersonal.DAL;
-using InformacionPersonal.Models;
-using InformacionPersonal.Models.Validations;
-using FluentValidation.Results;
 
 namespace InformacionPersonal.Controllers
 {
@@ -105,42 +103,14 @@ namespace InformacionPersonal.Controllers
         }
         #endregion
 
-        // GET: Personas/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Personas/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create([Bind(Include = "ID,Nombre,ApellidoPaterno,ApellidoMaterno,CURP")] Persona persona)
+        //// GET: Personas/Create
+        //public ActionResult Create()
         //{
-        //    //PersonaValidator validator = new PersonaValidator();
-        //    //ValidationResult result = validator.Validate(persona);
-
-        //    //if (result.IsValid)
-        //    //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Personal.Add(persona);
-        //        db.SaveChanges();
-        //        return RedirectToAction("ListaPersonas");
-        //    }
-        //    //else
-        //    //{
-        //    //    foreach (ValidationFailure failer in result.Errors)
-        //    //    {
-        //    //        ModelState.AddModelError(failer.PropertyName, failer.ErrorMessage);
-        //    //    }
-        //    //}
-
-        //    return View(persona);
+        //    return View();
         //}
+
+  
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Nombre,ApellidoPaterno,ApellidoMaterno,CURP")] Persona persona)
         {
             PersonaValidator validator = new PersonaValidator();
@@ -150,6 +120,7 @@ namespace InformacionPersonal.Controllers
             {
                 db.Personal.Add(persona);
                 db.SaveChanges();
+                return PartialView("_ListPartial", GetPersonas(1, null));
             }
             else
             {
@@ -183,9 +154,6 @@ namespace InformacionPersonal.Controllers
             return PartialView("_EditPartial", persona);
         }
 
-
-        
-
         // GET: Personas/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -205,16 +173,35 @@ namespace InformacionPersonal.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Nombre,ApellidoPaterno,ApellidoMaterno,CURP")] Persona persona)
         {
-            if (ModelState.IsValid)
+            PersonaValidator validator = new PersonaValidator();
+            ValidationResult result = validator.Validate(persona);
+
+            if (result.IsValid && ModelState.IsValid)
             {
                 db.Entry(persona).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("ListaPersonas");
+                return PartialView("_ListPartial", GetPersonas(1, null));
             }
-            return View(persona);
+            else
+            {
+                foreach (ValidationFailure failer in result.Errors)
+                {
+                    ModelState.AddModelError(failer.PropertyName, failer.ErrorMessage);
+                }
+                Response.StatusCode = 412;
+            }
+
+            return PartialView("_EditPartial", persona);
+
+            //if (ModelState.IsValid)
+            //{
+            //    db.Entry(persona).State = System.Data.Entity.EntityState.Modified;
+            //    db.SaveChanges();
+            //    return RedirectToAction("ListaPersonas");
+            //}
+            //return View(persona);
         }
 
         #region ***Eliminar...
@@ -235,13 +222,12 @@ namespace InformacionPersonal.Controllers
 
         // POST: Personas/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             Persona persona = db.Personal.Find(id);
             db.Personal.Remove(persona);
             db.SaveChanges();
-            return RedirectToAction("ListaPersonas");
+            return PartialView("_ListPartial", GetPersonas(1, null));
         }
         #endregion
 

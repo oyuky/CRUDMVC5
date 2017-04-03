@@ -1,61 +1,27 @@
 ﻿@model InformacionPersonal.Models.Persona
-@using (Ajax.BeginForm("Delete", "Personas", new AjaxOptions()
-{
-    InsertionMode = InsertionMode.Replace,
-    UpdateTargetId = "persona",
-    HttpMethod = "Post",
-    OnSuccess = "mensajeExito"
-}))
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.ID)
-    <div>
-        <dl class="dl-horizontal">
-            <dt>
-                <span>ID</span>
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ID)
-            </dd>
-            <dt>
-                <span>Nombre</span>
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Nombre)
-            </dd>
-
-            <dt>
-                <span>Apellido Paterno</span>
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ApellidoPaterno)
-            </dd>
-
-            <dt>
-                <span>Apellido Materno</span>
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ApellidoMaterno)
-            </dd>
-
-            <dt>
-                <span>CURP</span>
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CURP)
-            </dd>
-
-        </dl>
+@Html.AntiForgeryToken()
+<div class="form-horizontal" style="margin-left:50px;">
+    @Html.HiddenFor(model => model.ID, new { htmlAttributes = new { Id = "Model-ID" } })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Nombre, "Nombre: ", htmlAttributes: new { @class = "control-label" })
+        @Html.DisplayFor(model => model.Nombre)
     </div>
-    <div class="modal-footer">
-        <div class="form-group">
-            <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-            <input type="submit" value="Aceptar" class="btn btn-danger" />
-        </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ApellidoPaterno, "Apellido paterno: ", htmlAttributes: new { @class = "control-label" })
+        @Html.DisplayFor(model => model.ApellidoPaterno)
     </div>
-}
+    <div class="form-group">
+        @Html.LabelFor(model => model.ApellidoMaterno, "Apellido materno: ", htmlAttributes: new { @class = "control-label" })
+        @Html.DisplayFor(model => model.ApellidoMaterno)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CURP, "CURP: ", htmlAttributes: new { @class = "control-label" })
+        @Html.DisplayFor(model => model.CURP)
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="form-group">
+        <a href="#" class="btn btn-default" data-dismiss="modal">Cancelar</a>
+        <a href="javascript:eliminar(0);" class="btn btn-danger" title="Eliminar registro."><span class="glyphicon glyphicon-minus-sign" /> Aceptar</a>
+    </div>
+</div>

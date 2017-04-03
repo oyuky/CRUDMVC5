@@ -1,107 +1,24 @@
 ﻿@model InformacionPersonal.Models.Persona
 
-<div>
-    <dl class="dl-horizontal">
-        <dt>
-            <span>Nombre</span>
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-
-        <dt>
-            <span>Apellido Paterno</span>
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ApellidoPaterno)
-        </dd>
-
-        <dt>
-            <span>Apellido Materno</span>
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ApellidoMaterno)
-        </dd>
-
-        <dt>
-            <span>CURP</span>
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CURP)
-        </dd>
-
-    </dl>
+<div class="form-horizontal" style="margin-left:50px;">
+    @Html.HiddenFor(model => model.ID, new { htmlAttributes = new { Id = "Model-ID" } })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Nombre, "Nombre: ", htmlAttributes: new { @class = "control-label" })
+        @Html.DisplayFor(model => model.Nombre)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ApellidoPaterno, "Apellido paterno: ", htmlAttributes: new { @class = "control-label" })
+        @Html.DisplayFor(model => model.ApellidoPaterno)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ApellidoMaterno, "Apellido materno: ", htmlAttributes: new { @class = "control-label" })
+        @Html.DisplayFor(model => model.ApellidoMaterno)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CURP, "CURP: ", htmlAttributes: new { @class = "control-label" })
+        @Html.DisplayFor(model => model.CURP)
+    </div>
 </div>
 <div class="modal-footer">
     <a href="#" class="btn btn-default" data-dismiss="modal">Cerrar</a>
 </div>
-@*@model List<InformacionPersonal.Models.Persona>
-    @{
-        //vargrid=newWebGrid(Model,defaultSort:"Name",rowsPerPage:10,ajaxUpdateContainerId:"gridContent");
-        var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 10, ajaxUpdateContainerId: "gridContent");
-        grid.Pager(WebGridPagerModes.All);
-    }
-    <style type="text/css">
-        .webgrid-table {
-            font-family: "TrebuchetMS",Arial,Helvetica,sans-serif;
-            font-size: 1.2em;
-            width: 100%;
-            display: table;
-            border-collapse: separate;
-            border: solid1px#ff6a00;
-            background-color: white;
-        }
-
-        .webgrid-tabletd, th {
-            border: 1pxsolid#ff6a00;
-            padding: 3px7px2px;
-            text-align: left;
-        }
-
-        .webgrid-header {
-            background-color: #ff6a00;
-            color: #ffffff;
-            padding-bottom: 4px;
-            padding-top: 5px;
-            text-align: left;
-        }
-
-        .webgrid-footer {
-        }
-
-        .webgrid-row-style {
-            padding: 3px7px2px;
-        }
-
-        .webgrid-alternating-row {
-            background-color: #00ffff;
-            padding: 3px7px2px;
-        }
-    </style>
-    <div id="gridContent">
-        @grid.GetHtml(
-        tableStyle: "webgrid-table",
-        headerStyle: "webgrid-header",
-        footerStyle: "webgrid-footer",
-        alternatingRowStyle: "webgrid-alternating-row",
-        rowStyle: "webgrid-row-style",
-        columns: grid.Columns(
-        grid.Column(
-        header: "No.",
-        format:@<text>
-        <div>
-            @(item.WebGrid.Rows.IndexOf(item) + 1)
-        </div></text>),
-        grid.Column(columnName: "ID", header: "ID"),
-        grid.Column(header: "Nombre", format:
-        @<text><a href="#">
-            @item.Nombre
-        </a></text>),
-        grid.Column(columnName: "ApellidoPaterno", header: "ApellidoMaterno"),
-        grid.Column(columnName: "ApellidoMaterno", header: "ApellidoMaterno"),
-        grid.Column(columnName: "CURP", header: "CURP")))
-    </div>*@

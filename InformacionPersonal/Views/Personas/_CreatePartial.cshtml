@@ -1,61 +1,31 @@
 ﻿@model InformacionPersonal.Models.Persona
-
-@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <script src="~/Scripts/bootstrap.min.js"></script>*@
-
-@using (Ajax.BeginForm("Create", "Personas", new AjaxOptions()
-{
-    InsertionMode = InsertionMode.Replace,
-    UpdateTargetId = "persona",
-    HttpMethod = "Post",
-    OnSuccess = "mensajeExito"
-}))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        @Html.ValidationSummary(true)
-        <div class="form-group">
-            @*@Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })*@
-            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", @placeholder = "Nombre" } })
-            @Html.ValidationMessageFor(model => model.Nombre)
-        </div>
-
-        <div class="form-group">
-            @*@Html.LabelFor(model => model.ApellidoPaterno, htmlAttributes: new { @class = "control-label col-md-2" })*@
-            @Html.EditorFor(model => model.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control", @placeholder = "Apellido Paterno" } })
-            @Html.ValidationMessageFor(model => model.ApellidoPaterno, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="form-group">
-            @*@Html.LabelFor(model => model.ApellidoMaterno, htmlAttributes: new { @class = "control-label col-md-2" })*@
-            @Html.EditorFor(model => model.ApellidoMaterno, new { htmlAttributes = new { @class = "form-control", @placeholder = "Apellido Materno" } })
-            @Html.ValidationMessageFor(model => model.ApellidoMaterno, "", new { @class = "text-danger" })
-        </div>
-
-        <div class="form-group">
-            @*@Html.LabelFor(model => model.CURP, htmlAttributes: new { @class = "control-label col-md-2" })*@
-            @Html.EditorFor(model => model.CURP, new { htmlAttributes = new { @class = "form-control", @placeholder = "CURP" } })
-            @Html.ValidationMessageFor(model => model.CURP, "", new { @class = "text-danger" })
-        </div>
-
+@Html.AntiForgeryToken()
+<div class="form-horizontal">
+    @Html.ValidationSummary(true)
+    <div class="form-group">
+        @Html.LabelFor(model => model.Nombre,"Nombre: ", htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { Id = "Model-Nombre", @class = "form-control", @placeholder = "Carlos" } })
+        @Html.ValidationMessageFor(model => model.Nombre,"", new { @class = "text-danger" })
     </div>
-    <div class="modal-footer">
-        <div class="form-group">
-            <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-            <input type="submit" value="Create" class="btn btn-success" />
-            <a href="javascript:test(0);" class="btn btn-success crearPersona2" title="Crear Persona"><span class="glyphicon glyphicon-user" /> Crear Persona2</a>
-        </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ApellidoPaterno, "Apellido paterno: ", htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.ApellidoPaterno, new { htmlAttributes = new { Id = "Model-ApellidoPaterno", @class = "form-control", @placeholder = "Perez" } })
+        @Html.ValidationMessageFor(model => model.ApellidoPaterno,"", new { @class = "text-danger" })
     </div>
-}
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    @*<script>
-            (function ($) {
-                $('.field-validation-error').each(function () {
-                    $(this).parent().addClass('has-error');
-                });
-            })(jQuery);
-        </script>*@
-}
+    <div class="form-group">
+        @Html.LabelFor(model => model.ApellidoMaterno,"Apellido materno: ", htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.ApellidoMaterno, new { htmlAttributes = new { Id = "Model-ApellidoMaterno", @class = "form-control", @placeholder = "Molina" } })
+        @Html.ValidationMessageFor(model => model.ApellidoMaterno, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CURP,"CURP: ", htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.CURP, new { htmlAttributes = new { Id = "Model-CURP", @class = "form-control", @placeholder = "PEMC110313HCMLNS09" } })
+        @Html.ValidationMessageFor(model => model.CURP, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="form-group">
+        <a href="#" class="btn btn-default" data-dismiss="modal">Cancelar</a>
+        <a href="javascript:crear(0);" class="btn btn-success" title="Crear Persona"><span class="glyphicon glyphicon-save" /> Guardar</a>
+    </div>
+</div>
