@@ -27,3 +27,11 @@ textarea {
          width: 600px !important;
          margin: 30px auto !important;
      }
+.alert-message {
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    margin-left: -150px;
+    width: 500px;
+    z-index: 9999;
+}

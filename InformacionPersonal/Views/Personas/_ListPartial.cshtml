@@ -1,5 +1,5 @@
 ﻿@model  InformacionPersonal.Models.PersonasList
-
+@Html.AntiForgeryToken()
 <div class="table-responsive" id="dvPersonasInfo">
     <table class="table table-condensed personasInfo">
         <tr>
@@ -33,9 +33,9 @@
                 @Html.DisplayFor(modelItem => item.CURP)
             </td>
             <td>
-                <a href="javascript:void(0);" class="btn btn-info detallePersona" data-id="@item.ID" title="Detalles"><span class="glyphicon glyphicon-eye-open" /></a>
-                <a href="javascript:void(0);" class="btn btn-warning editarPersona" data-id="@item.ID" title="Editar"><span class="glyphicon glyphicon-edit" /></a>
-                <a href="javascript:void(0);" class="btn btn-danger eliminarPersona" data-id="@item.ID" title="Eliminar"><span class="glyphicon glyphicon-remove" /></a>
+                <a href="javascript:detallesModal(@item.ID);" class="btn btn-info detallePersona" data-id="@item.ID" title="Detalles"><span class="glyphicon glyphicon-eye-open" /></a>
+                <a href="javascript:editarModal(@item.ID);" class="btn btn-warning editarPersona" data-id="@item.ID" title="Editar"><span class="glyphicon glyphicon-edit" /></a>
+                <a href="javascript:eliminarModal(@item.ID);" class="btn btn-danger eliminarPersona" data-id="@item.ID" title="Eliminar"><span class="glyphicon glyphicon-remove" /></a>
             </td>
         </tr>
         }
@@ -61,3 +61,7 @@
 </div>
 
 <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+<script>
+
+   
+</script>

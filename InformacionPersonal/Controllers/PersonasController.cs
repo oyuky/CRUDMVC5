@@ -14,12 +14,10 @@ namespace InformacionPersonal.Controllers
     public class PersonasController : Controller
     {
         private PersonalContext db = new PersonalContext();
-
         private PersonasList personaslst = new PersonasList();
 
         #region ***Listar....
-        //Se utliza este tipo de paginado para evitar consultar todos lo registros,
-        //de esta forma solo se consultan los registros correspondientes a
+        //Se consultan los registros correspondientes a
         //la pagina que se esta visualizando.
 
         //Carga el listado de personas inicialmente...
@@ -31,7 +29,6 @@ namespace InformacionPersonal.Controllers
         }
 
         //Carga el listado de personas de una pagina en especifico
-        // GET: Personas
         [HttpPost]
         public ActionResult ListaPersonas(int currentPageIndex, [Bind(Include = "ID,Nombre,ApellidoPaterno,ApellidoMaterno,CURP")]Persona filtro)
         {
@@ -74,20 +71,7 @@ namespace InformacionPersonal.Controllers
         #endregion
 
         #region ***Ver detalles
-        // GET: Personas/Details/5
-        //public ActionResult Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Persona persona = db.Personal.Find(id);
-        //    if (persona == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(persona);
-        //}
+        //GET: Persona
         public ActionResult DetailsPartial(int? id)
         {
             if (id == null)
@@ -103,13 +87,13 @@ namespace InformacionPersonal.Controllers
         }
         #endregion
 
-        //// GET: Personas/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
+        #region ***Crear...
+        public ActionResult CreatePartial()
+        {
+            Persona model = new Persona();
+            return PartialView("_CreatePartial", model);
+        }
 
-  
         [HttpPost]
         public ActionResult Create([Bind(Include = "ID,Nombre,ApellidoPaterno,ApellidoMaterno,CURP")] Persona persona)
         {
@@ -133,13 +117,9 @@ namespace InformacionPersonal.Controllers
 
             return PartialView("_CreatePartial", persona);
         }
+        #endregion
 
-        public ActionResult CreatePartial()
-        {
-            Persona model = new Persona();
-            return PartialView("_CreatePartial", model);
-        }
-
+        #region ***Editar...
         public ActionResult EditPartial(int? id)
         {
             if (id == null)
@@ -194,15 +174,8 @@ namespace InformacionPersonal.Controllers
             }
 
             return PartialView("_EditPartial", persona);
-
-            //if (ModelState.IsValid)
-            //{
-            //    db.Entry(persona).State = System.Data.Entity.EntityState.Modified;
-            //    db.SaveChanges();
-            //    return RedirectToAction("ListaPersonas");
-            //}
-            //return View(persona);
         }
+        #endregion
 
         #region ***Eliminar...
         // GET: Personas/Delete/5

@@ -2,13 +2,83 @@
 var ajaxCallCreateURL = "/Personas/CreatePartial";
 var ajaxCallDetailsURL = "/Personas/DetailsPartial";
 var ajaxCallDeleteURL = "/Personas/DeletePartial";
-//Abrir modals
+//Abre el modal para visualizar los detalles de un registro
+var detallesModal = function (id) {
+    var $buttonClicked = $(this);
+    var options = {
+        "backdrop": "static",
+        keyboard: true
+    };
+    $.ajax({
+        type: "GET",
+        url: ajaxCallDetailsURL,
+        contentType: "application/json; charset=utf-8",
+        datatype: "json",
+        data: { id: id },
+        success: function (data) {
+            $("#divModalContent").html(data);
+            $("#modal_title").html("<span>Detalle de Registro</span>");
+            $("#divModal").modal(options);
+            $("#divModal").modal("show");
+        },
+        error: function () {
+            alert("Content load failed.");
+        }
+    });
+};
+//Abre el modal para editar la informacion de un registro
+var editarModal = function (id) {
+        var $buttonClicked = $(this);
+        var options = {
+            "backdrop": "static",
+            keyboard: true
+        };
+        $.ajax({
+            type: "GET",
+            url: ajaxCallEditURL,
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            data: { id: id },
+            success: function (data) {
+                $("#divModalContent").html(data);
+                $("#modal_title").html("<span>Editar Registro</span>");
+                $("#divModal").modal(options);
+                $("#divModal").modal("show");
+            },
+            error: function () {
+                alert("Content load failed.");
+            }
+        });
+};
+//Abre el modal para eliminar un registro
+var eliminarModal = function (id) {
+    var $buttonClicked = $(this);
+    var options = {
+        "backdrop": "static",
+        keyboard: true
+    };
+    $.ajax({
+        type: "GET",
+        url: ajaxCallDeleteURL,
+        contentType: "application/json; charset=utf-8",
+        datatype: "json",
+        data: { id: id },
+        success: function (data) {
+            $("#divModalContent").html(data);
+            $("#modal_title").html("<span>Está a punto de borrar el siguiente registro. ¿Desea continuar?</span>");
+            $("#divModal").modal(options);
+            $("#divModal").modal("show");
+        },
+        error: function () {
+            alert("Content load failed.");
+        }
+    });
+};
 $(function () {
     function PagerClick(index) {
         document.getElementById("hfCurrentPageIndex").value = index;
         document.forms[0].submit();
     }
-
     $(".crearPersona").click(function () {
         var $buttonClicked = $(this);
         var options = {
@@ -24,83 +94,6 @@ $(function () {
                 //debugger;
                 $("#divModalContent").html(data);
                 $("#modal_title").html("<span>Crear Registro</span>");
-                $("#divModal").modal(options);
-                $("#divModal").modal("show");
-            },
-            error: function () {
-                alert("Content load failed.");
-            }
-        });
-    });
-
-    $(".editarPersona").click(function () {
-        var $buttonClicked = $(this);
-        var id = $buttonClicked.attr("data-id");
-        var options = {
-            "backdrop": "static",
-            keyboard: true
-        };
-        $.ajax({
-            type: "GET",
-            url: ajaxCallEditURL,
-            contentType: "application/json; charset=utf-8",
-            datatype: "json",
-            data: { id: id },
-            success: function (data) {
-                //debugger;
-                $("#divModalContent").html(data);
-                $("#modal_title").html("<span>Editar Registro</span>");
-                $("#divModal").modal(options);
-                $("#divModal").modal("show");
-            },
-            error: function () {
-                alert("Content load failed.");
-            }
-        });
-    });
-
-    $(".detallePersona").click(function () {
-        var $buttonClicked = $(this);
-        var id = $buttonClicked.attr("data-id");
-        var options = {
-            "backdrop": "static",
-            keyboard: true
-        };
-        $.ajax({
-            type: "GET",
-            url: ajaxCallDetailsURL,
-            contentType: "application/json; charset=utf-8",
-            datatype: "json",
-            data: { id: id },
-            success: function (data) {
-                //debugger;
-                $("#divModalContent").html(data);
-                $("#modal_title").html("<span>Detalle de Registro</span>");
-                $("#divModal").modal(options);
-                $("#divModal").modal("show");
-            },
-            error: function () {
-                alert("Content load failed.");
-            }
-        });
-    });
-
-    $(".eliminarPersona").click(function () {
-        var $buttonClicked = $(this);
-        var id = $buttonClicked.attr("data-id");
-        var options = {
-            "backdrop": "static",
-            keyboard: true
-        };
-        $.ajax({
-            type: "GET",
-            url: ajaxCallDeleteURL,
-            contentType: "application/json; charset=utf-8",
-            datatype: "json",
-            data: { id: id },
-            success: function (data) {
-                $("#divModalContent").html(data);
-                $("#modal_title").html("<span>Está a punto de borrar el siguiente registro. ¿Desea continuar?</span>");
                 $("#divModal").modal(options);
                 $("#divModal").modal("show");
             },
@@ -129,7 +122,7 @@ function filtrar(pageindex) {
         data: JSON.stringify(
             {
                 "currentPageIndex": pageindex,
-                "Nombre":$('#Filtro_Nombre').val(),
+                "Nombre": $('#Filtro_Nombre').val(),
                 "ApellidoPaterno": $('#Filtro_ApellidoPaterno').val(),
                 "ApellidoMaterno": $('#Filtro_ApellidoMaterno').val(),
                 "CURP": $('#Filtro_CURP').val()
@@ -142,6 +135,7 @@ function filtrar(pageindex) {
         }
     });
 }
+
 function editar() {
     var $buttonClicked = $(this);
     var options = {
@@ -161,9 +155,13 @@ function editar() {
             CURP: $('#Model-CURP').val()
         }),
         success: function (data) {
-            alert("Registro Guardado exitosamente.");
+            $("#txtMessage").html("Registro actualizado exitosamente.");
+            $('#message').show();
             $("#listPersonas").html(data);
             $("#divModal").modal("hide");
+            $("#message").fadeTo(2000, 500).slideUp(500, function () {
+                $("#message").slideUp(500);
+            });
         },
         error: function (data) {
             $("#divModalContent").html(data.responseText);
@@ -192,9 +190,13 @@ function eliminar() {
             CURP: $('#Model-CURP').val()
         }),
         success: function (data) {
-            alert("Registro Guardado exitosamente.");
+            $("#txtMessage").html("Registro eliminado exitosamente.");
+            $('#message').show();
             $("#listPersonas").html(data);
             $("#divModal").modal("hide");
+            $("#message").fadeTo(2000, 500).slideUp(500, function () {
+                $("#message").slideUp(500);
+            });
         },
         error: function (data) {
             $("#divModalContent").html(data.responseText);
@@ -222,8 +224,12 @@ function crear() {
             CURP: $('#Model-CURP').val()
         }),
         success: function (data) {
-            alert("Registro Guardado exitosamente.");
+            $("#txtMessage").html("Registro guardado exitosamente.");
+            $('#message').show();
             $("#divModal").modal("hide");
+            $("#message").fadeTo(2000, 500).slideUp(500, function () {
+                $("#message").slideUp(500);
+            });
         },
         error: function (data) {
             $("#divModalContent").html(data.responseText);

@@ -41,7 +41,6 @@
     <script src="@Url.Content("~/Scripts/ServicesConsumer.js")"></script>
 }
 
-
 <div id="divModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -50,26 +49,12 @@
                 <h3 id="modal_title" class="modal-title"></h3>
             </div>
             <div id="divModalContent" class="modal-body">
-                <div style="text-align:center;display:none" id="loaderDiv">
-                    <img src="~/Content/images/load.gif" width="70" />
-                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div id="divMessages" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <a href="#" data-dismiss="modal" class="close"><span>&times;</span></a>
-                <h3 id="modal_title" class="modal-title"></h3>
-            </div>
-            <div id="divModalContent" class="modal-body">
-                <div style="text-align:center;display:none" id="loaderDiv">
-                    <img src="~/Content/images/load.gif" width="70" />
-                </div>
-            </div>
-        </div>
-    </div>
+<div id="message" class="alert alert-success alert-message fade">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Éxito!</strong> <span id="txtMessage"></span>
 </div>
