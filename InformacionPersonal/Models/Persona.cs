@@ -18,17 +18,17 @@ namespace InformacionPersonal.Models
     {
         public virtual Persona Filtro { get; set; }
         ///<summary>
-        /// Gets or sets Personas.
+        /// Personas
         ///</summary>
         public virtual List<Persona> Personas { get; set; }
 
         ///<summary>
-        /// Gets or sets CurrentPageIndex.
+        /// CurrentPageIndex.
         ///</summary>
         public virtual int CurrentPageIndex { get; set; }
 
         ///<summary>
-        /// Gets or sets PageCount.
+        /// PageCount.
         ///</summary>
         public virtual int PageCount { get; set; }
     }
